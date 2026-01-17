@@ -1,0 +1,11 @@
+[package]
+name = "my_blockchain"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "blockchainlib"
+
+[dependencies]
+crypto-hash = "0.3.4"
+hex = "0.4.3"

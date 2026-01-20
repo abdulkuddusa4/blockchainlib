@@ -1,3 +1,6 @@
+#![allow(warnings, dead_code, unused_variables)]
+
+
 use std::fmt::{ self, Debug, Formatter };
 use super::*;
 
@@ -5,10 +8,10 @@ use super::*;
 pub struct Block {
     pub index: u32,
     pub timestamp: u128,
-    pub hash: BlockHash,
-    pub prev_block_hash: BlockHash,
+    pub hash: kHash,
+    pub prev_block_hash: Hash,
     pub nonce: u64,
-    pub payload: String,
+    pub transactions: Vec<Transaction>,
     pub difficulty: u128,
 }
 
@@ -19,7 +22,7 @@ impl Debug for Block {
             &self.index,
             &hex::encode(&self.hash),
             &self.timestamp,
-            &self.payload,
+            &self.transactions.len(),
             &self.nonce,
 
         )
@@ -30,9 +33,8 @@ impl Block {
     pub fn new(
         index: u32,
         timestamp: u128,
-        prev_block_hash: BlockHash,
-        nonce: u64,
-        payload: String,
+        prev_block_hash: Hash,
+        transactions: Vec<Transaction>,
         difficulty: u128,
     )->Self{
         Block{
@@ -40,8 +42,8 @@ impl Block {
             timestamp,
             hash: vec![0;32],
             prev_block_hash,
-            nonce,
-            payload,
+            nonce: 0,
+            transactions,
             difficulty
         }
     }
@@ -66,7 +68,12 @@ impl Hashable for Block {
         bytes.extend(&u128_bytes(&self.timestamp));
         bytes.extend(&self.prev_block_hash);
         bytes.extend(&u64_bytes(&self.nonce));
-        bytes.extend(self.payload.as_bytes());
+        bytes.extend(
+            self.transactions
+                .iter()
+                .flat_map(|transaction|transaction.bytes())
+                .collect::<Vec<u8>>()
+        );
         bytes.extend(&u128_bytes(&self.difficulty));
         return bytes;
     }

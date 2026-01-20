@@ -1,3 +1,6 @@
+#![allow(warnings, dead_code, unused_variables)]
+
+
 pub trait Hashable{
 	fn bytes(&self) -> Vec<u8>;
 	fn hash(&self)-> Vec<u8>{

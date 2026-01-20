@@ -1,3 +1,6 @@
+#![allow(warnings, dead_code, unused_variables)]
+
+
 mod block;
 pub use crate::block::Block;
 
@@ -7,8 +10,13 @@ pub use hashable::Hashable;
 mod blockchain;
 pub use blockchain::Blockchain;
 
+mod transaction;
+pub use transaction::Transaction;
 
-type BlockHash = Vec<u8>;
+
+type Hash = Vec<u8>;
+// type Hash = String;
+type Address = String;
 
 // Credit: https://stackoverflow.com/a/44378174/2773837
 use std::time::{ SystemTime, UNIX_EPOCH };
@@ -89,7 +97,7 @@ pub fn difficulty_bytes_as_u128 (v: &Vec<u8>) -> u128 {
 }
 
 pub fn check_difficulty(
-    hash: &BlockHash,
+    hash: &Hash,
     difficulty: u128)
 ->bool
 {
